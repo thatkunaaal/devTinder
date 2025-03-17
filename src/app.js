@@ -6,19 +6,18 @@ const { adminAuth, userAuth } = require("./middleware/auth");
 const app = express();
 const port = 3000;
 
+app.use(express.json());
+
 app.post("/signup", async (req, res) => {
   //Create a new instance of the User Model.
-  const user = new User({
-    firstName: "Kishan",
-    lastName: "Singh",
-    emailID: "thatkunaal@gmail.com",
-    password: "Kishan231",
-  });
+  const user = new User(req.body);
   try {
     await user.save();
     res.send("User added successfully!!!");
   } catch (error) {
-    res.status(400).send('Something went wrong while adding user: ' + error.message);
+    res
+      .status(400)
+      .send("Something went wrong while adding user: " + error.message);
   }
 });
 
