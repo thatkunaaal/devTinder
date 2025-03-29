@@ -104,7 +104,7 @@ userSchema.methods.getJWT = async function(){
 
 userSchema.methods.isPasswordCorrect = async function(password){
   const hashedPassword = this.password;
-   return bcrypt.compare(password,hashedPassword)
+   return await bcrypt.compare(password,hashedPassword)
 }
 
 const User = mongoose.model("User", userSchema);

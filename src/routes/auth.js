@@ -1,6 +1,6 @@
 const express = require("express");
 const authRouter = express.Router();
-const { validate } = require("../utils/validate");
+const { validateSignUpData } = require("../utils/validate");
 const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
@@ -8,7 +8,7 @@ const validator = require("validator");
 authRouter.post("/signup", async (req, res) => {
   try {
     //Step 1) Validate the data
-    validate(req);
+    validateSignUpData(req);
 
     //Step 2) Encrypt the password
     const { firstName, lastName, emailId, password } = req.body;
