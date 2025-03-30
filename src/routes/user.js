@@ -37,6 +37,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedIn = req.user;
 
+
     const connections = await ConnectionRequest.find({
       status: "accepted",
       $or: [{ fromUserId: loggedIn._id }, { toUserId: loggedIn._id }],
@@ -60,8 +61,8 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
 userRouter.get("/user/feed", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
-    const page = (req.query.page) || 1
-    let limit = (req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1
+    let limit = parseInt(req.query.limit) || 10;
     limit = (limit>50)?50:limit;
     const skip = (page-1)*limit;
 
@@ -75,14 +76,14 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       hideUserFromFeed.add(connection.fromUserId.toString());
       hideUserFromFeed.add(connection.toUserId.toString());
     });
-
     const feedData = await User.find({
      $and : [
        { _id : { $nin : Array.from(hideUserFromFeed) } },
        { _id : { $ne : loggedInUser._id } }
      ]
-    }).skip(skip).limit(limit);
+    })
 
+   
     res.status(200).json({ data: feedData });
   } catch (err) {
     res.status(400).send("Error: " + err.message);
