@@ -5,7 +5,7 @@ const { status } = require("express/lib/response");
 const { Connection, connection } = require("mongoose");
 const { User } = require("../models/user");
 const userRouter = express.Router();
-const USER_SAFE_DATA = "firstName lastName age gender skills about";
+const USER_SAFE_DATA = "firstName lastName age gender skills about photoUrl";
 
 userRouter.get("/user/request/received", userAuth, async (req, res) => {
   try {
@@ -22,6 +22,7 @@ userRouter.get("/user/request/received", userAuth, async (req, res) => {
       "gender",
       "skills",
       "about",
+      "photoUrl"
     ]);
 
     res.status(200).json({
@@ -58,7 +59,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   }
 });
 
-userRouter.get("/user/feed", userAuth, async (req, res) => {
+userRouter.get("/feed", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
     const page = parseInt(req.query.page) || 1
