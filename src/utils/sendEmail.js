@@ -21,9 +21,9 @@ const sendMail = async (toUserId, subject, content) => {
   };
 
   // step 3) send mail through transporter
-  console.log("sending  email");
+//   console.log("sending  email");
   const res = await transporter.sendMail(mailContent);
-  console.log(res);
+//   console.log(res);
 };
 
 module.exports = sendMail;
