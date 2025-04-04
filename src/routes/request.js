@@ -3,6 +3,7 @@ const requestRouter = express.Router();
 const { userAuth } = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const { User } = require("../models/user");
+const sendMail = require("../config/sendEmail");
 
 requestRouter.post(
   "/request/send/:status/:userId",
@@ -45,6 +46,13 @@ requestRouter.post(
       });
 
       await connectionObj.save();
+
+      if(status === "interested"){
+        subject = "A new request is waiting for you!!"
+        content = `<h1>Hi ${toUser.firstName},</h1><br/><br/><p>There is a new request waiting for you on devTinder.com.</p> <br/> <h3>Kindly do login to view it!!</h3>        `
+        await sendMail(toUser.emailId,subject,content);
+      }
+        
 
       res.send(
         fromUser.firstName +
