@@ -4,6 +4,8 @@ require('dotenv').config()
 const { connectDB } = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
+const http = require("http");
+const initialiseSocket = require('./utils/socket')
 
 require("./utils/cron");
 
@@ -31,6 +33,9 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/",userRouter)
 app.use("/",paymentRouter);
+
+const server = http.createServer(app);
+initialiseSocket(server);
 
 {
   //middleware
@@ -66,7 +71,7 @@ app.use("/",paymentRouter);
 connectDB()
   .then(() => {
     console.log("Database connection established...");
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(`Server is started on port ${port}`);
     });
   })

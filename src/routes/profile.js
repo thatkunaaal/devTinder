@@ -3,6 +3,7 @@ const profileRouter = express.Router();
 const { userAuth } = require("../middleware/auth");
 const { validateUpdateRequestData } = require("../utils/validate");
 const bcrypt = require('bcrypt');
+const { User } = require("../models/user");
 
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
@@ -62,6 +63,16 @@ try {
   res.status(400).send("Error: " + err.message);
 }
 
+})
+
+profileRouter.get("/profile/:id",async (req,res)=>{
+  try {
+    const id = req.params.id;
+    const user = await User.findById(id);
+    res.status(200).json({firstName: user.firstName ,lastName : user.lastName});
+  } catch (err) {
+    res.status(400).json({message:err.message});
+  }
 })
 
 module.exports = profileRouter;
