@@ -74,7 +74,11 @@ authRouter.post("/login", async (req, res) => {
     const token = await user.getJWT();
 
     //Step 2) This token is wrapped up inside the cookie ans send back to the browser.
-    res.cookie("token", token, { expires: new Date(Date.now() + 604800000) });
+    res.cookie("token", token, { 
+      secure: true,
+      sameSite: "none",
+      httpOnly : true,
+      expires: new Date(Date.now() + 86400000) });
     res.status(200).send(user);
   } catch (err) {
     res.status(400).send(err.message);
