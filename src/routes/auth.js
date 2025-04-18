@@ -14,9 +14,8 @@ authRouter.post("/signup", async (req, res) => {
     const { firstName, lastName, emailId, password } = req.body;
 
     // Step 3) CHeck if the email already exist.
-    const alreadyExist = await User.findOne({emailId : emailId});
-    if(alreadyExist)
-      throw new Error("User had already register. Try login!");
+    const alreadyExist = await User.findOne({ emailId: emailId });
+    if (alreadyExist) throw new Error("User had already register. Try login!");
 
     const hashPassword = await bcrypt.hash(password, 10);
 
@@ -32,10 +31,16 @@ authRouter.post("/signup", async (req, res) => {
     // step 1) token generation
     const token = await user.getJWT();
     //step 2) step up cookie , expires in 1 day.
-    res.cookie("token",token,{ expires: new Date(Date.now() + 86400000) });
-    res.status(200).json({message : "User added successfully!!!" , data : savedUser});
+    res.cookie("token", token, { 
+      secure: true,
+      sameSite: "none",
+      httpOnly : true,
+      expires: new Date(Date.now() + 86400000) });
+    res
+      .status(200)
+      .json({ message: "User added successfully!!!", data: savedUser });
   } catch (err) {
-    res.status(400).json({message : err.message});
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -76,10 +81,9 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
-authRouter.post("/logout",(req,res)=>{
+authRouter.post("/logout", (req, res) => {
   res.clearCookie("token");
   res.status(200).send("User logged out successfully.");
 });
-
 
 module.exports = authRouter;
